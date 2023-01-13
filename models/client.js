@@ -17,6 +17,11 @@ const clientSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    foods: [
+        {
+            type: mongoose.Types.ObjectId,
+        }
+    ]
 
 })
 

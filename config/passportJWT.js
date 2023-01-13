@@ -1,5 +1,6 @@
 const passport = require('passport');
 const Client = require('../models/client');
+const Customer = require('../models/customer');
 
 const JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
@@ -14,10 +15,18 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
         }
         if (user) {
             return done(null, user);
-        } else {
-            return done(null, false);
-            // or you could create a new account
         }
+
+        Customer.findOne({id: jwt_payload.id}, function(err, customer) {
+            if (err) {
+                return done(err, false);
+            }
+            if (customer) {
+                return done(null, customer);
+            }
+            return done(null, false);
+        })
+            // or you could create a new account
     });
 }));
 

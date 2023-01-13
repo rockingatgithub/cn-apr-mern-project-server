@@ -4,11 +4,20 @@ const router = express.Router()
 
 
 router.post('/signup', async (req, res) => {
-    const client = await Customer.create(req.body)
-    if(client){
-        return res.status(200).json({ message: "Client created successfully!", client:client })
+
+    try {
+
+        const client = await Customer.create(req.body)
+        if(client){
+            return res.status(200).json({ message: "Client created successfully!", client:client })
+        }
+        return res.status(401).json({ message: "Unauthorized!"})
+
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({ message: "Server error!"})
     }
-    return res.status(500).json({ message: "Error Occured!"})
+    
 })
 
 router.post('/signin', async (req, res) => {
